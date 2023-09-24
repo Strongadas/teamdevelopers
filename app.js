@@ -68,8 +68,8 @@ app.post('/',(req,res)=>{
         port:456,
         secure:true,
         auth:{
-            user: process.env.EMAIL_USER,
-            pass:GMAIL_PASSWORD
+            user: process.env.GMAIL_EMAIL,
+            pass:process.env.GMAIL_PASSWORD
         }
     })
     const emailMessage = {
