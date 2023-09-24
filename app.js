@@ -78,6 +78,7 @@ app.post('/',(req,res)=>{
         }else{
             console.log('Email sent:', info.response)
             console.log(name)
+            res.redirect('/')
         }
     })
 })
