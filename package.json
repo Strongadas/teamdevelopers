@@ -1,0 +1,19 @@
+{
+  "name": "team-developers",
+  "version": "1.0.0",
+  "description": "team dev",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "team developers",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "mongoose": "^6.10.0",
+    "nodemailer": "^6.9.5"
+  }
+}
