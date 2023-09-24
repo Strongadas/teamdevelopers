@@ -6,7 +6,8 @@ const nodemailer = require('nodemailer')
 
 const app = express()
 
-mongoose.connect('mongodb://localhost:27017/TdSendersDb')
+//mongoose.connect('mongodb://localhost:27017/TdSendersDb')
+mongoose.connect("mongodb+srv://Anacleto:Strongadas@cluster0.odsr23g.mongodb.net/teamDB")
 
 app.use(express.static('public'))
 app.set('view engine','ejs')
