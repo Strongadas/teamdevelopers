@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const ejs = require('ejs')
 const bodyParser = require('body-parser')
@@ -8,13 +7,7 @@ const nodemailer = require('nodemailer')
 const app = express()
 
 //mongoose.connect('mongodb://localhost:27017/TdSendersDb')
-mongoose.connect(process.env.MONGO_DB,{ useNewUrlParser: true, useUnifiedTopology: true })
-.then(() => {
-  console.log('Connected to MongoDB');
-})
-.catch((err) => {
-  console.error('MongoDB connection error:', err);
-})
+mongoose.connect("mongodb+srv://Anacleto:Strongadas@cluster0.odsr23g.mongodb.net/teamDB")
 
 app.use(express.static('public'))
 app.set('view engine','ejs')
@@ -28,9 +21,6 @@ const senderSchema = new mongoose.Schema({
 })
 
 const Sender = new mongoose.model('Sender', senderSchema)
-
-
-
 
 app.get('/',(req,res)=>{
     res.render('home')
@@ -68,8 +58,8 @@ app.post('/',(req,res)=>{
         port:456,
         secure:true,
         auth:{
-            user: process.env.GMAIL_EMAIL,
-            pass:process.env.GMAIL_PASSWORD
+            user:"teamdevelopers72@gmail.com",
+            pass:"tpqe yuyw rvnt cxmi"
         }
     })
     const emailMessage = {
