@@ -1,0 +1,41 @@
+const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+
+// Connect to your MongoDB database (assuming you're using Mongoose)
+mongoose.connect('mongodb://localhost/your-database-name', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Define a Mongoose model for your content (e.g., Project)
+const Project = mongoose.model('Project', {
+  title: String,
+  description: String,
+  // Add other fields as needed
+});
+
+// Route to handle the search query
+app.get('/search', async (req, res) => {
+  try {
+    const query = req.query.search;
+
+    // Use a regular expression to perform a case-insensitive search on the title and description fields
+    const results = await Project.find({
+      $or: [
+        { title: { $regex: new RegExp(query, 'i') } },
+        { description: { $regex: new RegExp(query, 'i') } },
+      ],
+    });
+
+    res.render('search-results', { results });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});

@@ -33,52 +33,57 @@ app.get('/projects',(req,res)=>{
     res.render('projects')
 })
 
-app.post('/', async (req, res) => {
-    try {
-      const { name, email, message } = req.body;
-  
-      // Create a new Sender instance
-      const sender = new Sender({
-        sender: name,
-        email,
-        message,
-      });
-  
-      // Save the sender's information to the database
-      await sender.save();
-      console.log('Saved to Db')
-  
-      // Create a Nodemailer transporter
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'teamdevelopers72@gmail.com',
-          pass: 'tpqe yuyw rvnt cxmi',
-        },
-      });
-  
-      // Compose the email message
-      const emailMessage = {
-        from: 'Team Developers <teamdevelopers72@gmail.com>',
-        to: 'teamdevelopers72@gmail.com',
-        subject: `New client ${name} wants to get in touch with your Team`,
-        text: `${email} said: ${message}`,
-      };
-  
-      // Send the email
-      const info = await transporter.sendMail(emailMessage);
-  
-      console.log('Email sent:', info.response);
-      console.log(name);
-  
-      // Redirect the user after successful submission
-      res.redirect('/');
-    } catch (err) {
-      console.error('Error:', err);
-      // Handle errors here, e.g., sending an error response
-      res.status(500).send('Internal Server Error');
+app.post('/',(req,res)=>{
+
+    const name = req.body.name
+    const email = req.body.email
+    const message = req.body.message
+
+    const sender = new Sender({
+        sender:name,
+        email:email,
+        message:message
+    })
+
+   
+
+    const transporter = nodemailer.createTransport({
+        service:'gmail',
+        port:456,
+        secure:true,
+        auth:{
+            user: "teamdevelopers72@gmail.com",
+            pass:"tpqe yuyw rvnt cxmi"
+        }
+    })
+    const emailMessage = {
+        from:"Team Developers",
+        to: "teamdevelopers72@gmail.com",
+        subject: "Team Developers a new client " + name + " wants to get in touch with your Team",
+        text: email + " Said: " + message
+        
+
     }
-  });
+    
+    transporter.sendMail(emailMessage,(err, info)=>{
+        
+        if(err){
+            console.log('error sending email' , err)
+        }else{
+            console.log('Email sent:', info.response)
+            console.log(name)
+            
+            sender.save((err)=>{
+                if(err){
+                    console.log(err)
+                }else{
+                    console.log('saved to database')
+                    res.redirect('/')
+                }
+            })
+        }
+    })
+})
 
 
 const PORT = process.env.PORT || 3000
