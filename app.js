@@ -29,15 +29,7 @@ const senderSchema = new mongoose.Schema({
 
 const Sender = new mongoose.model('Sender', senderSchema)
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    port:456,
-    secure:true,
-    auth: {
-      user: process.env.GMAIL_EMAIL,
-      pass: process.env.GMAIL_PASSWORD,
-    },
-  });
+
 
 
 app.get('/',(req,res)=>{
@@ -50,37 +42,58 @@ app.get('/projects',(req,res)=>{
     res.render('projects')
 })
 
-app.post('/', async (req, res) => {
-    try {
-      const { name, email, message } = req.body;
-  
-      // Save sender data to MongoDB
-      const sender = new Sender({ name, email, message });
-      await sender.save((err)=>{
-        if(err){
-            console.log(err)
-        }else{
-            console.log("saved to db")
+app.post('/',(req,res)=>{
+
+    const name = req.body.name
+    const email = req.body.email
+    const message = req.body.message
+
+    const sender = new Sender({
+        sender:name,
+        email:email,
+        message:message
+    })
+
+   
+
+    const transporter = nodemailer.createTransport({
+        service:'gmail',
+        port:456,
+        secure:true,
+        auth:{
+            user: process.env.EMAIL_USER,
+            pass:GMAIL_PASSWORD
         }
-      });
-  
-      // Send email
-      const emailMessage = {
-        from: 'Team Developers',
-        to: 'teamdevelopers72@gmail.com',
-        subject: `New client ${name} wants to get in touch with your Team`,
-        text: `${email} said: ${message}`,
-      };
-  
-      await transporter.sendMail(emailMessage);
-      console.log('Email sent');
-  
-      res.redirect('/');
-    } catch (err) {
-      console.error('Error:', err);
-      res.status(500).send('Internal Server Error');
+    })
+    const emailMessage = {
+        from:"Team Developers",
+        to: "teamdevelopers72@gmail.com",
+        subject: "Team Developers a new client " + name + " wants to get in touch with your Team",
+        text: email + " Said: " + message
+        
+
     }
-  });
+    
+    transporter.sendMail(emailMessage,(err, info)=>{
+        
+        if(err){
+            console.log('error sending email' , err)
+        }else{
+            console.log('Email sent:', info.response)
+            console.log(name)
+
+            sender.save((err)=>{
+                if(err){
+                    console.log(err)
+                }else{
+                    console.log('saved to database')
+                    res.redirect('/')
+                }
+            })
+        }
+    })
+})
+
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT,(err)=>{
