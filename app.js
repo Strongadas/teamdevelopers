@@ -53,7 +53,14 @@ app.post('/',(req,res)=>{
         email:email,
         message:message
     })
-
+    sender.save((err)=>{
+        if(err){
+            console.log(err)
+        }else{
+            console.log('saved to database')
+            
+        }
+    })
    
 
     const transporter = nodemailer.createTransport({
@@ -81,15 +88,8 @@ app.post('/',(req,res)=>{
         }else{
             console.log('Email sent:', info.response)
             console.log(name)
-
-            sender.save((err)=>{
-                if(err){
-                    console.log(err)
-                }else{
-                    console.log('saved to database')
-                    res.redirect('/')
-                }
-            })
+            res.redirect('/')
+            
         }
     })
 })
