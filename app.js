@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const ejs = require('ejs')
 const bodyParser = require('body-parser')
@@ -7,7 +8,9 @@ const nodemailer = require('nodemailer')
 const app = express()
 
 //mongoose.connect('mongodb://localhost:27017/TdSendersDb')
-mongoose.connect("mongodb+srv://Anacleto:Strongadas@cluster0.odsr23g.mongodb.net/teamDB")
+mongoose.connect(process.env.MONGO_DB)
+mongoose.set('strictQuery', false);
+
 
 app.use(express.static('public'))
 app.set('view engine','ejs')
